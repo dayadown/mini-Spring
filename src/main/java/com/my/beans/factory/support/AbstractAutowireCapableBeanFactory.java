@@ -1,6 +1,8 @@
 package com.my.beans.factory.support;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.my.beans.BeansException;
+import com.my.beans.PropertyValue;
 import com.my.beans.factory.config.BeanDefinition;
 
 
@@ -26,15 +28,37 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Class beanClass = beanDefinition.getBeanClass();
 		Object bean = null;
 		try {
-			//调用createBeanInstance创建实例
+			//调用createBeanInstance(bean实例策略)创建实例
 			//bean=createBeanInstance(beanDefinition);
 			bean=instantiationStrategy.instantiate(beanDefinition);
+			//为bean填充属性
+			applyPropertyValues(beanName, bean, beanDefinition);
 		} catch (Exception e) {
 			throw new BeansException("Instantiation of bean failed", e);
 		}
 
 		addSingleton(beanName, bean);
 		return bean;
+	}
+
+	/**
+	 * 根据bean信息为bean填充属性
+	 * @param beanName
+	 * @param bean
+	 * @param beanDefinition
+	 */
+	protected void applyPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) {
+		try {
+			for (PropertyValue propertyValue : beanDefinition.getPropertyValues().getPropertyValues()) {
+				String name = propertyValue.getName();
+				Object value = propertyValue.getValue();
+
+				//BeanUtil.setFieldValue 方法会反射地访问bean的字段并设置其值
+				BeanUtil.setFieldValue(bean, name, value);
+			}
+		} catch (Exception ex) {
+			throw new BeansException("Error setting property values for bean: " + beanName, ex);
+		}
 	}
 
 	/**
