@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.my.beans.BeansException;
 import com.my.beans.PropertyValue;
 import com.my.beans.factory.config.BeanDefinition;
+import com.my.beans.factory.config.BeanReference;
 
 
 /**
@@ -52,7 +53,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			for (PropertyValue propertyValue : beanDefinition.getPropertyValues().getPropertyValues()) {
 				String name = propertyValue.getName();
 				Object value = propertyValue.getValue();
-
+				//判断属性类型是否为另一个bean（是否为BeanReference类型）
+				if(value instanceof BeanReference){
+					//value是另一个bean，则去取该bean
+					BeanReference beanReference = (BeanReference) value;
+					value = getBean(beanReference.getBeanName());
+				}
 				//BeanUtil.setFieldValue 方法会反射地访问bean的字段并设置其值
 				BeanUtil.setFieldValue(bean, name, value);
 			}
