@@ -1,11 +1,15 @@
 package com.my.test.ioc;
 
+import cn.hutool.core.io.IoUtil;
 import com.my.beans.PropertyValue;
 import com.my.beans.PropertyValues;
 import com.my.beans.factory.config.BeanDefinition;
 import com.my.beans.factory.config.BeanReference;
 import com.my.beans.factory.support.DefaultListableBeanFactory;
 import org.junit.Test;
+import com.my.core.io.*;
+
+import java.io.InputStream;
 
 /**
  * ioc测试
@@ -68,5 +72,33 @@ public class BeanTest {
         Person person = (Person) beanFactory.getBean("person");
         System.out.println(person);
         System.out.println(person.getCar());
+    }
+
+
+    /**
+     * 资源加载测试
+     * @throws Exception
+     */
+    @Test
+    public void testResourceLoader() throws Exception {
+        DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
+
+        //加载classpath下的资源
+        Resource resource = resourceLoader.getResource("classpath:hello.txt");
+        InputStream inputStream = resource.getInputStream();
+        String content = IoUtil.readUtf8(inputStream);
+        System.out.println(content);
+
+        //加载文件系统资源
+        resource = resourceLoader.getResource("src/main/resources/hello.txt");
+        inputStream = resource.getInputStream();
+        content = IoUtil.readUtf8(inputStream);
+        System.out.println(content);
+
+        //加载url资源
+        resource = resourceLoader.getResource("https://www.baidu.com");
+        inputStream = resource.getInputStream();
+        content = IoUtil.readUtf8(inputStream);
+        System.out.println(content);
     }
 }
