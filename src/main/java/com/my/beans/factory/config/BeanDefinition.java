@@ -14,8 +14,7 @@ public class BeanDefinition {
 	private PropertyValues propertyValues;
 
 	public BeanDefinition(Class beanClass) {
-		this.beanClass = beanClass;
-		this.propertyValues=null;
+		this(beanClass, null);
 	}
 
 	/**

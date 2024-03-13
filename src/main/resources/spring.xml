@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="person" class="com.my.test.ioc.Person">
+        <property name="name" value="derek"/>
+        <property name="age" value="10"/>
+        <property name="car" ref="car"/>
+    </bean>
+
+    <bean id="car" class="com.my.test.ioc.Car">
+        <property name="brand" value="porsche"/>
+    </bean>
+</beans>

@@ -6,6 +6,7 @@ import com.my.beans.PropertyValues;
 import com.my.beans.factory.config.BeanDefinition;
 import com.my.beans.factory.config.BeanReference;
 import com.my.beans.factory.support.DefaultListableBeanFactory;
+import com.my.beans.factory.xml.XmlBeanDefinitionReader;
 import org.junit.Test;
 import com.my.core.io.*;
 
@@ -101,4 +102,26 @@ public class BeanTest {
         content = IoUtil.readUtf8(inputStream);
         System.out.println(content);
     }
+
+    /**
+     * 测试从xml中读取bean信息放入bean容器中
+     */
+    @Test
+    public void testXmlFile() throws Exception {
+        //创建bean容器
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        //创建xml读取器，绑定读取的bean信息由bean容器注册
+        XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
+        //读取信息
+        beanDefinitionReader.loadBeanDefinitions("classpath:spring.xml");
+
+        Person person = (Person) beanFactory.getBean("person");
+        System.out.println(person);
+
+
+        Car car = (Car) beanFactory.getBean("car");
+        System.out.println(car);
+    }
+
+
 }

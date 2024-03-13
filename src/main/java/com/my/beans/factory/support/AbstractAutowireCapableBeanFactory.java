@@ -11,7 +11,7 @@ import com.my.beans.factory.config.BeanReference;
  * 有自动装配能力的抽象bean容器，实现了抽象bean容器的创建bean的方法，没有实获取bean信息的方法，所以还是抽象类
  */
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
-	//使用构造哈函数策略创建实例
+	//使用构造函数策略创建实例
 	private InstantiationStrategy instantiationStrategy = new SimpleInstantiationStrategy();
 
 	@Override

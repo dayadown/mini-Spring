@@ -2,7 +2,7 @@ package com.my.beans.factory.config;
 
 
 /**
- * 单例bean的注册接口
+ * 单例池注册功能接口
  */
 public interface SingletonBeanRegistry {
 
