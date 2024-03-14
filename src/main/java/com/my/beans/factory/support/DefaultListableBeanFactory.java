@@ -39,6 +39,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		return beanDefinitionMap.containsKey(beanName);
 	}
 
+	/**
+	 * 从bean信息容器查找要取的类型的bean的名字，然后getBean即可，返回可能是多个
+	 * @param type
+	 * @return
+	 * @param <T>
+	 * @throws BeansException
+	 */
 	@Override
 	public <T> Map<String, T> getBeansOfType(Class<T> type) throws BeansException {
 		Map<String, T> result = new HashMap<>();
@@ -56,5 +63,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	public String[] getBeanDefinitionNames() {
 		Set<String> beanNames = beanDefinitionMap.keySet();
 		return beanNames.toArray(new String[beanNames.size()]);
+	}
+
+	@Override
+	public void preInstantiateSingletons() throws BeansException {
+		beanDefinitionMap.keySet().forEach(this::getBean);
 	}
 }

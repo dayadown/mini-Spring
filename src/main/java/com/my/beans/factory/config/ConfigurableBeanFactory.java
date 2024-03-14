@@ -13,4 +13,11 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
      * @param beanPostProcessor
      */
     void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
+
+    /**
+     * 提前实例化所有单例实例
+     *
+     * @throws BeansException
+     */
+    void preInstantiateSingletons() throws BeansException;
 }

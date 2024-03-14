@@ -7,6 +7,7 @@ import com.my.beans.factory.config.BeanDefinition;
 import com.my.beans.factory.config.BeanReference;
 import com.my.beans.factory.support.DefaultListableBeanFactory;
 import com.my.beans.factory.xml.XmlBeanDefinitionReader;
+import com.my.context.support.ClassPathXmlApplicationContext;
 import org.junit.Test;
 import com.my.core.io.*;
 import com.my.test.ioc.common.*;
@@ -160,5 +161,22 @@ public class BeanTest {
         //brand属性在CustomerBeanPostProcessor中被修改为lamborghini
         Car car = (Car) beanFactory.getBean("car");
         System.out.println(car);
+    }
+
+    /**
+     * 测试ApplicationContext通过xml自动配置bean信息后处理和bean后处理
+     * @throws Exception
+     */
+    @Test
+    public void testApplicationContext() throws Exception {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+
+        Person person = applicationContext.getBean("person", Person.class);
+        System.out.println(person);
+        //name属性在CustomBeanFactoryPostProcessor中被修改为ivy
+
+        Car car = applicationContext.getBean("car", Car.class);
+        System.out.println(car);
+        //brand属性在CustomerBeanPostProcessor中被修改为lamborghini
     }
 }

@@ -9,4 +9,8 @@
     <bean id="car" class="com.my.test.ioc.Car">
         <property name="brand" value="porsche"/>
     </bean>
+
+    <bean class="com.my.test.ioc.common.CustomBeanFactoryPostProcessor"/>
+
+    <bean class="com.my.test.ioc.common.CustomerBeanPostProcessor"/>
 </beans>
