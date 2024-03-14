@@ -9,6 +9,7 @@ import com.my.beans.factory.support.DefaultListableBeanFactory;
 import com.my.beans.factory.xml.XmlBeanDefinitionReader;
 import org.junit.Test;
 import com.my.core.io.*;
+import com.my.test.ioc.common.*;
 
 import java.io.InputStream;
 
@@ -123,5 +124,41 @@ public class BeanTest {
         System.out.println(car);
     }
 
+    /**
+     * 测试BeanFactoryPostProcessor的更改bean信息的功能
+     */
+    @Test
+    public void testBeanFactoryPostProcessor() throws Exception {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
+        beanDefinitionReader.loadBeanDefinitions("classpath:spring.xml");
 
+        //在所有BeanDefintion加载完成后，但在bean实例化之前，修改BeanDefinition的属性值
+        CustomBeanFactoryPostProcessor beanFactoryPostProcessor = new CustomBeanFactoryPostProcessor();
+        beanFactoryPostProcessor.postProcessBeanFactory(beanFactory);
+
+
+        //name属性在CustomBeanFactoryPostProcessor中被修改为ivy
+        Person person = (Person) beanFactory.getBean("person");
+        System.out.println(person);
+    }
+
+    /**
+     * 测试BeanPostProcessor的更改bean实例对象的功能
+     * @throws Exception
+     */
+    @Test
+    public void testBeanPostProcessor() throws Exception {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
+        beanDefinitionReader.loadBeanDefinitions("classpath:spring.xml");
+
+        //添加bean实例化后的处理器
+        CustomerBeanPostProcessor customerBeanPostProcessor = new CustomerBeanPostProcessor();
+        beanFactory.addBeanPostProcessor(customerBeanPostProcessor);
+
+        //brand属性在CustomerBeanPostProcessor中被修改为lamborghini
+        Car car = (Car) beanFactory.getBean("car");
+        System.out.println(car);
+    }
 }
