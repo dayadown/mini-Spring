@@ -20,4 +20,9 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
      * @throws BeansException
      */
     void preInstantiateSingletons() throws BeansException;
+
+    /**
+     * 销毁单例bean
+     */
+    void destroySingletons();
 }

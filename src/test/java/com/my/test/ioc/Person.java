@@ -11,4 +11,5 @@ public class Person {
 
     //依赖的Car时另一个bean
     private Car car;
+
 }

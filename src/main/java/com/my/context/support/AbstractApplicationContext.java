@@ -26,7 +26,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 		//在bean实例化之前，执行BeanFactoryPostProcessor，即执行xml中加载的所有bean信息后处理程序，修改bean信息
 		invokeBeanFactoryPostProcessors(beanFactory);
 
-		//注册BeanPostProcessors，将BeanPostProcessors信息读出并创建bean，将bean加入bean信息后处理队列
+		//注册BeanPostProcessors，将BeanPostProcessors信息读出并创建bean，将创建的bean加入bean后处理队列，初始化bean前后会拿出来执行
 		registerBeanPostProcessors(beanFactory);
 
 		//提前实例化单例bean
@@ -47,11 +47,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
 		//从bean容器中获得BeanFactoryPostProcessor类的bean
-		//执行该方法时，容器中并没有BeanFactoryPostProcessors，所以这里的getBeansOfType会从bean信息容器查找bean的名字，然后getBean,getBean会创建BeanFactoryPostProcessors
+		//执行该方法时，容器中并没有BeanFactoryPostProcessors的bean，所以这里的getBeansOfType会从bean信息容器根据类型查找bean的名字，然后getBean,getBean会创建BeanFactoryPostProcessors
 		Map<String, BeanFactoryPostProcessor> beanFactoryPostProcessorMap = beanFactory.getBeansOfType(BeanFactoryPostProcessor.class);
 		//直接依次执行每一个BeanFactoryPostProcessor
 		for (BeanFactoryPostProcessor beanFactoryPostProcessor : beanFactoryPostProcessorMap.values()) {
 			beanFactoryPostProcessor.postProcessBeanFactory(beanFactory);
+			System.out.println("修改bean信息的方法执行了");
 		}
 	}
 
@@ -88,5 +89,22 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 	}
 
 	public abstract ConfigurableListableBeanFactory getBeanFactory();
+
+	public void registerShutdownHook() {
+		Thread shutdownHook = new Thread() {
+			public void run() {
+				doClose();
+			}
+		};
+		Runtime.getRuntime().addShutdownHook(shutdownHook);
+	}
+
+	protected void doClose() {
+		destroyBeans();
+	}
+
+	protected void destroyBeans() {
+		getBeanFactory().destroySingletons();
+	}
 }
 

@@ -10,7 +10,7 @@ import com.my.test.ioc.Car;
 public class CustomerBeanPostProcessor implements BeanPostProcessor {
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		System.out.println("CustomerBeanPostProcessor#postProcessBeforeInitialization");
+		System.out.println(beanName+"初始化前置方法执行了");
 		//换兰博基尼
 		if ("car".equals(beanName)) {
 			((Car) bean).setBrand("lamborghini");
@@ -20,7 +20,7 @@ public class CustomerBeanPostProcessor implements BeanPostProcessor {
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		System.out.println("CustomerBeanPostProcessor#postProcessAfterInitialization");
+		System.out.println(beanName+"初始化后置方法执行了");
 		return bean;
 	}
 }
