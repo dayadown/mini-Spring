@@ -104,6 +104,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * @return
 	 */
 	protected Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition) {
+		//如果该bean实现了BeanFactoryAware，即该bean可以感知到beanFactory的存在，
+		// 将this（即BeanFactory实例对象）暴露给其setBeanFactory方法
+		if (bean instanceof BeanFactoryAware) {
+			((BeanFactoryAware) bean).setBeanFactory(this);
+		}
+
 		//执行BeanPostProcessor的前置处理
 		Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean, beanName);
 

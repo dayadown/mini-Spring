@@ -180,9 +180,26 @@ public class BeanTest {
         //brand属性在CustomerBeanPostProcessor中被修改为lamborghini
     }
 
+    /**
+     * 测试初始化销毁方法和自定义初始化销毁方法
+     * @throws Exception
+     */
     @Test
     public void testInitAndDestroyMethod() throws Exception {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:init-and-destroy-method.xml");
         applicationContext.registerShutdownHook();  //或者手动关闭 applicationContext.close();
     }
+
+
+    /**
+     * 测试Aware接口
+     * @throws Exception
+     */
+    @Test
+    public void test() throws Exception {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        HelloServiceAware helloServiceAware = applicationContext.getBean("helloServiceAware", HelloServiceAware.class);
+    }
+
+
 }

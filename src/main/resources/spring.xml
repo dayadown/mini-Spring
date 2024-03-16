@@ -13,4 +13,6 @@
     <bean class="com.my.test.ioc.common.CustomBeanFactoryPostProcessor"/>
 
     <bean class="com.my.test.ioc.common.CustomerBeanPostProcessor"/>
+
+    <bean id="helloServiceAware" class="com.my.test.ioc.HelloServiceAware"/>
 </beans>
