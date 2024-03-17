@@ -52,7 +52,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		//往单例池中加bean，加的时候将有销毁方法的bean加到单独的池中，而所有bean放入另一池中
 		//也就是将有销毁方法的bean复制一份封装起来（有定义其销毁方法）放在单独的池中
 		registerDisposableBeanIfNecessary(beanName,bean,beanDefinition);
-		addSingleton(beanName, bean);
+
+		//如果是原型的bean，则不放入单例池
+		if(beanDefinition.isSingleton()) {
+			addSingleton(beanName, bean);
+		}
+
 		return bean;
 	}
 
@@ -64,10 +69,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * @param beanDefinition
 	 */
 	protected void registerDisposableBeanIfNecessary(String beanName, Object bean, BeanDefinition beanDefinition) {
-		//如果该bean实现了DisposableBean销毁接口或者bean信息中含有销毁方法的方法名，即用户自定义了销毁方法
-		if (bean instanceof DisposableBean || StrUtil.isNotEmpty(beanDefinition.getDestroyMethodName())) {
-			//将该bean用适配器封装
-			registerDisposableBean(beanName, new DisposableBeanAdapter(bean, beanName, beanDefinition));
+		//只有单例bean才会执行销毁前的自带销毁和自定义销毁方法
+		if(beanDefinition.isSingleton()) {
+			//如果该bean实现了DisposableBean销毁接口或者bean信息中含有销毁方法的方法名，即用户自定义了销毁方法
+			if (bean instanceof DisposableBean || StrUtil.isNotEmpty(beanDefinition.getDestroyMethodName())) {
+				//将该bean用适配器封装
+				registerDisposableBean(beanName, new DisposableBeanAdapter(bean, beanName, beanDefinition));
+			}
 		}
 	}
 

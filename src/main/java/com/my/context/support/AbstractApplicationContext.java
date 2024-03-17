@@ -98,14 +98,17 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 	public abstract ConfigurableListableBeanFactory getBeanFactory();
 
 	public void registerShutdownHook() {
+		//定义JVM关闭钩子
 		Thread shutdownHook = new Thread() {
 			public void run() {
 				doClose();
 			}
 		};
+		//在JVM关闭之前执行关闭钩子，也就是在bean容器被销毁之前执行钩子函数（重写的方法或是配置的方法）
 		Runtime.getRuntime().addShutdownHook(shutdownHook);
 	}
 
+	//执行销毁方法
 	protected void doClose() {
 		destroyBeans();
 	}

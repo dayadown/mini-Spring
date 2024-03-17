@@ -8,7 +8,6 @@ import lombok.Data;
  */
 @Data
 public class BeanDefinition {
-
 	//Class信息
 	private Class beanClass;
 
@@ -20,6 +19,16 @@ public class BeanDefinition {
 
 	//bean销毁方法的名字
 	private String destroyMethodName;
+
+	//bean的创建模式，scope
+	//单例
+	public static String SCOPE_SINGLETON = "singleton";
+	//原型
+	public static String SCOPE_PROTOTYPE = "prototype";
+	//默认是单例的
+	private String scope = SCOPE_SINGLETON;
+	private boolean singleton = true;
+	private boolean prototype = false;
 
 	public BeanDefinition(Class beanClass) {
 		this(beanClass, null);
@@ -34,4 +43,5 @@ public class BeanDefinition {
 		this.beanClass = beanClass;
 		this.propertyValues = propertyValues != null ? propertyValues : new PropertyValues();
 	}
+
 }

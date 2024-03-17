@@ -187,7 +187,8 @@ public class BeanTest {
     @Test
     public void testInitAndDestroyMethod() throws Exception {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:init-and-destroy-method.xml");
-        applicationContext.registerShutdownHook();  //或者手动关闭 applicationContext.close();
+        //注册销毁钩子函数，在JVM正式关闭之前（也就是bean被销毁之前）执行销毁方法
+        applicationContext.registerShutdownHook();
     }
 
 
@@ -199,6 +200,19 @@ public class BeanTest {
     public void test() throws Exception {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
         HelloServiceAware helloServiceAware = applicationContext.getBean("helloServiceAware", HelloServiceAware.class);
+    }
+
+    /**
+     * 测试原型bean和单例bean
+     */
+    @Test
+    public void testPrototype() throws Exception {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:prototype-bean.xml");
+
+        Car car1 = applicationContext.getBean("car", Car.class);
+        Car car2 = applicationContext.getBean("car", Car.class);
+        System.out.println(car1==car2);
+        //将prototype-bean.xml中的car的scope属性改为singleton再次测试观察输出
     }
 
 

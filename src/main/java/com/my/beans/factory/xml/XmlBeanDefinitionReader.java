@@ -32,6 +32,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	static final String INIT_METHOD_ATTRIBUTE = "init-method";
 	public static final String DESTROY_METHOD_ATTRIBUTE = "destroy-method";
 
+	public static final String SCOPE_ATTRIBUTE="scope";
+
 	/**
 	 * 注册bean信息注册器，这里只有DefaultListableBeanFactory实现了BeanDefinitionRegistry
 	 * 所以其实这里就是把bean容器的方法关于bean信息容器的方法暴露给了这个读取器
@@ -106,6 +108,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 					String className = bean.getAttribute(CLASS_ATTRIBUTE);
 					String initMethodName = bean.getAttribute(INIT_METHOD_ATTRIBUTE);
 					String destroyMethodName = bean.getAttribute(DESTROY_METHOD_ATTRIBUTE);
+					String scope=bean.getAttribute(SCOPE_ATTRIBUTE);
 
 					Class<?> clazz = null;
 					try {
@@ -125,6 +128,13 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 					//将自定义初始和销毁方法的方法名放入
 					beanDefinition.setInitMethodName(initMethodName);
 					beanDefinition.setDestroyMethodName(destroyMethodName);
+					//判断scope类型并将scope信息放入
+					//如果bean是原型的，则更改bean信息中的默认（单例）配置,否则不做更改
+					if(scope.equals(BeanDefinition.SCOPE_PROTOTYPE)){
+						beanDefinition.setSingleton(false);
+						beanDefinition.setPrototype(true);
+						beanDefinition.setScope(scope);
+					}
 
 					//解析属于这个bean的<property>,遍历bean标签的子标签
 					for (int j = 0; j < bean.getChildNodes().getLength(); j++) {
