@@ -18,7 +18,7 @@ public interface BeanFactory {
 	Object getBean(String name) throws BeansException;
 
 	/**
-	 * 根据名称和类型查找bean
+	 * 根据name查bean，在返回时将类型强制转为requiredType
 	 *
 	 * @param name
 	 * @param requiredType

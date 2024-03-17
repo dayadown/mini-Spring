@@ -215,5 +215,28 @@ public class BeanTest {
         //将prototype-bean.xml中的car的scope属性改为singleton再次测试观察输出
     }
 
+    /**
+     * 测试FactoryBean的创建，单例及原型
+     * @throws Exception
+     */
+    @Test
+    public void testFactoryBean() throws Exception {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:factory-bean.xml");
+
+        // 明明配置的bean是com.my.test.ioc.CarFactoryBean，但是返回的是Car
+        // 单例池中存在com.my.test.ioc.CarFactoryBean的实例，在查询的返回处做了手脚，如果是FactoryBean，不返回查到的这个bean
+        // 而是返回其内部方法创造的bean
+        Car car = (Car)applicationContext.getBean("carFactoryBean");
+        System.out.println(car);
+
+        Car car1=(Car)applicationContext.getBean("carFactoryBean");
+        System.out.println(car1==car);
+        //将CarFactoryBean中isSingleton返回值改为false，再次测试
+
+
+        //测试FactoryBean为原型时，是否影响内部创建bean的单例性,factory-bean.xml中加入scope="prototype"，再次测试
+
+    }
+
 
 }

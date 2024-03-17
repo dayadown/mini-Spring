@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="carFactoryBean" class="com.my.test.ioc.CarFactoryBean" scope="prototype">
+        <property name="brand" value="porsche"/>
+    </bean>
+</beans>
