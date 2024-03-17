@@ -235,6 +235,7 @@ public class BeanTest {
 
 
         //测试FactoryBean为原型时，是否影响内部创建bean的单例性,factory-bean.xml中加入scope="prototype"，再次测试
+        //不影响，因为是根据<beanName，内部创建bean>来缓存的，根据beanName查，而不是bean的实例
 
     }
 
