@@ -7,7 +7,8 @@ import com.my.core.io.ResourceLoader;
 /**
  * 应用上下文，
  * 上下文 即可以应用到的bean后处理和bean信息后处理，bean容器会自动根据该上下文执行bean后处理和bean信息后处理
+ * 具有事件发布功能
  */
-public interface ApplicationContext extends ListableBeanFactory, HierarchicalBeanFactory, ResourceLoader {
+public interface ApplicationContext extends ListableBeanFactory, HierarchicalBeanFactory, ResourceLoader ,ApplicationEventPublisher{
 
 }

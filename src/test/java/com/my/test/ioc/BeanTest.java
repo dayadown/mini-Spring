@@ -8,6 +8,7 @@ import com.my.beans.factory.config.BeanReference;
 import com.my.beans.factory.support.DefaultListableBeanFactory;
 import com.my.beans.factory.xml.XmlBeanDefinitionReader;
 import com.my.context.support.ClassPathXmlApplicationContext;
+import com.my.test.ioc.common.event.CustomEvent;
 import org.junit.Test;
 import com.my.core.io.*;
 import com.my.test.ioc.common.*;
@@ -237,6 +238,14 @@ public class BeanTest {
         //测试FactoryBean为原型时，是否影响内部创建bean的单例性,factory-bean.xml中加入scope="prototype"，再次测试
         //不影响，因为是根据<beanName，内部创建bean>来缓存的，根据beanName查，而不是bean的实例
 
+    }
+
+    @Test
+    public void testEventListener() throws Exception {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:event-and-event-listener.xml");
+        applicationContext.publishEvent(new CustomEvent(applicationContext));
+
+        applicationContext.registerShutdownHook();//或者applicationContext.close()主动关闭容器;
     }
 
 
