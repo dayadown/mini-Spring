@@ -63,7 +63,7 @@ public class CglibAopProxy implements AopProxy {
 			if (advised.getMethodMatcher().matches(method, advised.getTargetSource().getTarget().getClass())) {
 				//获取拦截器
 				org.aopalliance.intercept.MethodInterceptor methodInterceptor = advised.getMethodInterceptor();
-				//使用方法拦截器的方法实现代理逻辑
+				//使用方法拦截器的方法实现代理逻辑，传入原对象方法的调用方式
 				return methodInterceptor.invoke(methodInvocation);
 			}
 			return methodInvocation.proceed();
