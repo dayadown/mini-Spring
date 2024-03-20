@@ -1,7 +1,9 @@
 package com.my.test.aop;
 
 import com.my.aop.aspectj.AspectJExpressionPointcut;
+import com.my.aop.framework.CglibAopProxy;
 import com.my.aop.framework.JdkDynamicAopProxy;
+import net.sf.cglib.proxy.Enhancer;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -23,6 +25,10 @@ public class AopTests {
         System.out.println(pointcut.matches(method,clazz));
     }
 
+    /**
+     * 基于JDK的动态代理测试
+     * @throws Exception
+     */
     @Test
     public void testJdkDynamicProxy() throws Exception {
         WorldService worldService = new WorldServiceImpl();
@@ -42,6 +48,29 @@ public class AopTests {
 
         //创建代理对象，因为代理对象实现了和被代理对象的一样的接口，所以可以转换为被代理对象的接口类型
         WorldService proxy = (WorldService) new JdkDynamicAopProxy(advisedSupport).getProxy();
+        proxy.explode();
+    }
+
+
+    @Test
+    public void testCglibDynamicProxy() throws Exception {
+
+        WorldService worldService = new WorldServiceImpl();
+
+        //定义代理支持
+        AdvisedSupport advisedSupport = new AdvisedSupport();
+        //定义被代理的对象资源
+        TargetSource targetSource = new TargetSource(worldService);
+        //定义拦截器
+        WorldServiceInterceptor methodInterceptor = new WorldServiceInterceptor();
+        //定义方法选择器,选择com.my.test.aop包下，WorldService的explode方法，方法参数任意
+        MethodMatcher methodMatcher = new AspectJExpressionPointcut("execution(* com.my.test.aop.WorldService.explode(..))").getMethodMatcher();
+        //为代理支持加入三个参数
+        advisedSupport.setTargetSource(targetSource);
+        advisedSupport.setMethodInterceptor(methodInterceptor);
+        advisedSupport.setMethodMatcher(methodMatcher);
+
+        WorldService proxy = (WorldService) new CglibAopProxy(advisedSupport).getProxy();
         proxy.explode();
     }
 }
