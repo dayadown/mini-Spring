@@ -13,6 +13,7 @@ import java.util.Set;
 
 /**
  * 支持AspectJ切点表达式的PointCut实现
+ * 解析切点表达式，匹配切点范围下的类或方法，
  */
 public class AspectJExpressionPointcut implements Pointcut, ClassFilter, MethodMatcher {
 

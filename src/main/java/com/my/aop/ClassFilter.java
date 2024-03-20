@@ -2,7 +2,7 @@ package com.my.aop;
 
 
 /**
- * 类选择器
+ * 类选择器（选择即看是否有该类）
  */
 public interface ClassFilter {
 
