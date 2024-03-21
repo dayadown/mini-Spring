@@ -3,7 +3,7 @@ package com.my.aop;
 import lombok.Getter;
 
 /**
- * 被代理的对象的封装对象
+ * 被代理的对象的封装对象，获取被代理对象的类信息和接口信息
  */
 @Getter
 public class TargetSource {

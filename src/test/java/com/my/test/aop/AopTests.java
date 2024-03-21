@@ -4,6 +4,7 @@ import com.my.aop.aspectj.AspectJExpressionPointcut;
 import com.my.aop.framework.CglibAopProxy;
 import com.my.aop.framework.JdkDynamicAopProxy;
 import com.my.aop.framework.ProxyFactory;
+import com.my.aop.framework.adapter.MethodBeforeAdviceInterceptor;
 import net.sf.cglib.proxy.Enhancer;
 import org.junit.Test;
 
@@ -109,6 +110,40 @@ public class AopTests {
         // 使用CGLIB动态代理
         advisedSupport.setProxyTargetClass(true);
         proxy = (WorldService) new ProxyFactory(advisedSupport).getProxy();
+        proxy.explode();
+    }
+
+
+    /**
+     * 前置通知测试类
+     */
+    @Test
+    public void testBeforeAdvice() throws Exception {
+        //被代理对象
+        WorldService worldService = new WorldServiceImpl();
+
+        //定义代理支持
+        AdvisedSupport advisedSupport = new AdvisedSupport();
+        //定义被代理的对象资源
+        TargetSource targetSource = new TargetSource(worldService);
+
+
+        //设置BeforeAdvice（前置通知方法）
+        WorldServiceBeforeAdvice beforeAdvice = new WorldServiceBeforeAdvice();
+        //定义前置通知拦截器
+        MethodBeforeAdviceInterceptor methodInterceptor = new MethodBeforeAdviceInterceptor(beforeAdvice);
+
+
+
+        //定义方法选择器,选择com.my.test.aop包下，WorldService的explode方法，方法参数任意
+        MethodMatcher methodMatcher = new AspectJExpressionPointcut("execution(* com.my.test.aop.WorldService.explode(..))").getMethodMatcher();
+        //为代理支持加入三个参数
+        advisedSupport.setTargetSource(targetSource);
+        advisedSupport.setMethodInterceptor(methodInterceptor);
+        advisedSupport.setMethodMatcher(methodMatcher);
+
+
+        WorldService proxy = (WorldService) new ProxyFactory(advisedSupport).getProxy();
         proxy.explode();
     }
 }
