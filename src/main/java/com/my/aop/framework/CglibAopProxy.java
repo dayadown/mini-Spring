@@ -54,7 +54,7 @@ public class CglibAopProxy implements AopProxy {
 		 * @return
 		 * @throws Throwable
 		 *
-		 * 增强对象的方法执行前，会跳转执行这个函数
+		 * 增强对象的方法执行，会跳转执行这个函数
 		 * 四个参数分别为1.调用的增强对象实体，2.调用的方法 3.参数 4.MethodProxy对象。即原始方法
 		 */
 		@Override
@@ -85,7 +85,7 @@ public class CglibAopProxy implements AopProxy {
 		}
 
 		/**
-		 * 调用
+		 * 调用原始方法，用CGlib的方式而不是用target.invoke(method,arguments)
 		 * @return
 		 * @throws Throwable
 		 */
@@ -94,4 +94,7 @@ public class CglibAopProxy implements AopProxy {
 			return this.methodProxy.invoke(this.target, this.arguments);
 		}
 	}
+
+
+
 }
