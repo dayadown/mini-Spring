@@ -8,10 +8,9 @@ import java.lang.reflect.Method;
 public interface MethodMatcher {
 
 	/**
-	 * 能否找到到某一个方法
+	 * 能否找到某类的的某方法
 	 * @param method
-	 * @param targetClass
 	 * @return
 	 */
-	boolean matches(Method method, Class<?> targetClass);
+	boolean matches(Method method);
 }

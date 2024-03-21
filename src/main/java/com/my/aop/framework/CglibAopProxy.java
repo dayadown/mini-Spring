@@ -1,9 +1,9 @@
 package com.my.aop.framework;
 
+import com.my.aop.AdvisedSupport;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
-import com.my.aop.AdvisedSupport;
 
 import java.lang.reflect.Method;
 
@@ -60,7 +60,7 @@ public class CglibAopProxy implements AopProxy {
 		@Override
 		public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
 			CglibMethodInvocation methodInvocation = new CglibMethodInvocation(advised.getTargetSource().getTarget(), method, objects, methodProxy);
-			if (advised.getMethodMatcher().matches(method, advised.getTargetSource().getTarget().getClass())) {
+			if (advised.getMethodMatcher().matches(method)) {
 				//获取拦截器
 				org.aopalliance.intercept.MethodInterceptor methodInterceptor = advised.getMethodInterceptor();
 				//使用方法拦截器的方法实现代理逻辑，传入原对象方法的调用方式

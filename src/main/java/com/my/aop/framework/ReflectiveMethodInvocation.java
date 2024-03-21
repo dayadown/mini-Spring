@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 
 /**
  * 反射方法调用，用反射执行方法原来的执行逻辑
+ * 方法拦截器的invoke函数需要传入MethodInvocation，所以这里对原对象的各类资源做包装，以适配拦截器函数
  */
 public class ReflectiveMethodInvocation implements MethodInvocation {
 

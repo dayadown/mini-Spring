@@ -63,14 +63,14 @@ public class JdkDynamicAopProxy implements AopProxy, InvocationHandler {
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		//如果方法能在被代理对象中找到，则代理，否则直接放行
-		//定义的切点下能否找到属于某个类的某个方法
-		if (advised.getMethodMatcher().matches(method, advised.getTargetSource().getTarget().getClass())) {
+		//判断该方法是否是切点监视的方法（该方法是否满足切点表达式）
+		if (advised.getMethodMatcher().matches(method)) {
 			//获取拦截器
 			MethodInterceptor methodInterceptor = advised.getMethodInterceptor();
 			//将原方法的反射调用传入，并执行拦截器的方法，拦截器实现了代理的逻辑
 			return methodInterceptor.invoke(new ReflectiveMethodInvocation(advised.getTargetSource().getTarget(), method, args));
 
-			//平时接触的并没有定义拦截器，直接在这个大括号里实现代理的逻辑
+			//平时接触的并没有定义拦截器，直接在这个大括号里实现代理的逻辑，直接在代理返回那里定义匿名函数
 		}
 		return method.invoke(advised.getTargetSource().getTarget(), args);
 	}

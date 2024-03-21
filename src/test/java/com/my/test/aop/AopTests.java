@@ -4,6 +4,7 @@ import com.my.aop.aspectj.AspectJExpressionPointcut;
 import com.my.aop.framework.CglibAopProxy;
 import com.my.aop.framework.JdkDynamicAopProxy;
 import com.my.aop.framework.ProxyFactory;
+import com.my.aop.framework.adapter.MethodAfterAdviceInterceptor;
 import com.my.aop.framework.adapter.MethodBeforeAdviceInterceptor;
 import net.sf.cglib.proxy.Enhancer;
 import org.junit.Test;
@@ -24,7 +25,7 @@ public class AopTests {
         Method method = clazz.getDeclaredMethod("sayHello");
 
         System.out.println(pointcut.matches(clazz));
-        System.out.println(pointcut.matches(method,clazz));
+        System.out.println(pointcut.matches(method));
     }
 
     /**
@@ -115,7 +116,7 @@ public class AopTests {
 
 
     /**
-     * 前置通知测试类
+     * 通知测试类
      */
     @Test
     public void testBeforeAdvice() throws Exception {
@@ -130,8 +131,14 @@ public class AopTests {
 
         //设置BeforeAdvice（前置通知方法）
         WorldServiceBeforeAdvice beforeAdvice = new WorldServiceBeforeAdvice();
+        //设置后置通知方法
+        WorldServiceAfterAdvice afterAdvice=new WorldServiceAfterAdvice();
+
+
         //定义前置通知拦截器
-        MethodBeforeAdviceInterceptor methodInterceptor = new MethodBeforeAdviceInterceptor(beforeAdvice);
+        MethodBeforeAdviceInterceptor methodBeforeAdviceInterceptor = new MethodBeforeAdviceInterceptor(beforeAdvice);
+        //定义后置通知拦截器
+        MethodAfterAdviceInterceptor methodAfterAdviceInterceptor =new MethodAfterAdviceInterceptor(afterAdvice);
 
 
 
@@ -139,7 +146,7 @@ public class AopTests {
         MethodMatcher methodMatcher = new AspectJExpressionPointcut("execution(* com.my.test.aop.WorldService.explode(..))").getMethodMatcher();
         //为代理支持加入三个参数
         advisedSupport.setTargetSource(targetSource);
-        advisedSupport.setMethodInterceptor(methodInterceptor);
+        advisedSupport.setMethodInterceptor(methodAfterAdviceInterceptor);
         advisedSupport.setMethodMatcher(methodMatcher);
 
 
