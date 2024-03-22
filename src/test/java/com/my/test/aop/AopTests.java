@@ -1,6 +1,7 @@
 package com.my.test.aop;
 
 import com.my.aop.aspectj.AspectJExpressionPointcut;
+import com.my.aop.aspectj.AspectJExpressionPointcutAdvisor;
 import com.my.aop.framework.CglibAopProxy;
 import com.my.aop.framework.JdkDynamicAopProxy;
 import com.my.aop.framework.ProxyFactory;
@@ -8,6 +9,7 @@ import com.my.aop.framework.adapter.MethodAfterAdviceInterceptor;
 import com.my.aop.framework.adapter.MethodBeforeAdviceInterceptor;
 import com.my.aop.framework.adapter.MethodThrowsAdviceInterceptor;
 import net.sf.cglib.proxy.Enhancer;
+import org.aopalliance.intercept.MethodInterceptor;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -150,11 +152,50 @@ public class AopTests {
         MethodMatcher methodMatcher = new AspectJExpressionPointcut("execution(* com.my.test.aop.WorldService.explode(..))").getMethodMatcher();
         //为代理支持加入三个参数
         advisedSupport.setTargetSource(targetSource);
-        advisedSupport.setMethodInterceptor(methodThrowsAdviceInterceptor);
+        advisedSupport.setMethodInterceptor(methodAfterAdviceInterceptor);
         advisedSupport.setMethodMatcher(methodMatcher);
 
 
         WorldService proxy = (WorldService) new ProxyFactory(advisedSupport).getProxy();
         proxy.explode();
+    }
+
+    /**
+     * 测试切点和通知的结合体
+     */
+    @Test
+    public void testPointCutAdvisor(){
+        //被代理对象
+        WorldService worldService = new WorldServiceImpl();
+
+        //定义切点通知结合体
+        AspectJExpressionPointcutAdvisor aspectJExpressionPointcutAdvisor=new AspectJExpressionPointcutAdvisor();
+
+
+        //设置切点通知结合体的切点
+        String pointCutExpression="execution(* com.my.test.aop.WorldService.explode(..))";
+        aspectJExpressionPointcutAdvisor.setExpression(pointCutExpression);
+
+        //设置切点通知结合体的通知为前置通知
+        MethodBeforeAdviceInterceptor beforeAdvice = new MethodBeforeAdviceInterceptor(new WorldServiceBeforeAdvice());
+        aspectJExpressionPointcutAdvisor.setAdvice(beforeAdvice);
+
+        //定义代理支持
+        AdvisedSupport advisedSupport = new AdvisedSupport();
+
+        //定义被代理的对象
+        TargetSource targetSource = new TargetSource(worldService);
+
+        //设置代理支持的三个属性，切点和通知均需要从结合体中拿
+        advisedSupport.setTargetSource(targetSource);
+        advisedSupport.setMethodInterceptor((MethodInterceptor) aspectJExpressionPointcutAdvisor.getAdvice());
+        advisedSupport.setMethodMatcher(aspectJExpressionPointcutAdvisor.getPointcut().getMethodMatcher());
+
+
+        //advisedSupport.setProxyTargetClass(true);   //JDK or CGLIB
+
+        WorldService proxy = (WorldService) new ProxyFactory(advisedSupport).getProxy();
+        proxy.explode();
+
     }
 }
