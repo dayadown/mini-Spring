@@ -2,6 +2,7 @@
 <beans>
     <!--要被代理的bean（不会存入单例池，因为代理需要对象，所以需要配置）-->
     <bean id="worldService" class="com.my.test.aop.WorldServiceImpl"/>
+    <!--<bean id="helloService" class="com.my.test.aop.HelloServiceImpl"/>-->
 
     <!--BeanPostProcessor的实现类，会在bean实例化之前加入BeanPostProcessor池-->
     <bean class="com.my.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
@@ -9,6 +10,7 @@
     <!--切点和通知结合体类，用户创建代理对象-->
     <bean id="pointcutAdvisor" class="com.my.aop.aspectj.AspectJExpressionPointcutAdvisor">
         <property name="expression" value="execution(* com.my.test.aop.WorldService.explode(..))"/>
+        <!--<property name="expression" value="execution(* com.my.test.aop.HelloService.sayHello(..))"/>-->
         <property name="advice" ref="methodInterceptor"/>
     </bean>
 
@@ -18,8 +20,8 @@
         <property name="advice" ref="beforeAdvice"/>
     </bean>
 
-
     <!--前置通知方法-->
     <bean id="beforeAdvice" class="com.my.test.aop.WorldServiceBeforeAdvice"/>
+    <!--<bean id="beforeAdvice" class="com.my.test.aop.HelloServiceBeforeAdvice"/>-->
 
 </beans>

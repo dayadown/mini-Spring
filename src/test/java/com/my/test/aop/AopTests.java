@@ -9,6 +9,7 @@ import com.my.aop.framework.adapter.MethodAfterAdviceInterceptor;
 import com.my.aop.framework.adapter.MethodBeforeAdviceInterceptor;
 import com.my.aop.framework.adapter.MethodThrowsAdviceInterceptor;
 import com.my.context.support.ClassPathXmlApplicationContext;
+import com.my.test.aop.HelloService;
 import net.sf.cglib.proxy.Enhancer;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.junit.Test;
@@ -211,5 +212,7 @@ public class AopTests {
         //获取代理对象
         WorldService worldService = applicationContext.getBean("worldService", WorldService.class);
         worldService.explode();
+        //HelloService helloService = applicationContext.getBean("helloService", HelloService.class);
+        //helloService.sayHello();
     }
 }

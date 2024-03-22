@@ -48,7 +48,7 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
 				//获取类选择器
 				ClassFilter classFilter = advisor.getPointcut().getClassFilter();
 				//如果该bean类在切点表达式中，则创建一个代理对象并返回
-				if (classFilter.matches(beanClass)) {
+				//if (classFilter.matches(beanClass)) {
 					//创建代理支持
 					AdvisedSupport advisedSupport = new AdvisedSupport();
 
@@ -66,7 +66,7 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
 
 					//返回代理对象
 					return new ProxyFactory(advisedSupport).getProxy();
-				}
+				//}
 			}
 		} catch (Exception ex) {
 			throw new BeansException("Error create proxy bean for: " + beanName, ex);

@@ -6,10 +6,7 @@ import com.my.beans.factory.BeanFactoryAware;
 import com.my.context.ApplicationContext;
 import com.my.context.ApplicationContextAware;
 
-/**
- * @author derekyi
- * @date 2020/12/6
- */
+
 public class WorldServiceImpl implements WorldService{
 
 	@Override
