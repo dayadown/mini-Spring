@@ -11,6 +11,7 @@ import com.my.beans.factory.config.BeanDefinition;
 import com.my.beans.factory.config.BeanPostProcessor;
 import com.my.beans.factory.config.BeanReference;
 import lombok.Data;
+import com.my.beans.factory.config.InstantiationAwareBeanPostProcessor;
 
 import java.lang.reflect.Method;
 
@@ -25,8 +26,54 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 	@Override
 	protected Object createBean(String beanName, BeanDefinition beanDefinition) throws BeansException {
+		//如果bean需要代理，则直接返回代理对象
+		Object bean = resolveBeforeInstantiation(beanName, beanDefinition);
+		if (bean != null) {
+			return bean;
+		}
+
 		return doCreateBean(beanName, beanDefinition);
 	}
+
+
+
+	/**
+	 * 执行InstantiationAwareBeanPostProcessor的方法，如果bean需要代理，直接返回代理对象
+	 *
+	 * @param beanName
+	 * @param beanDefinition
+	 * @return
+	 */
+	protected Object resolveBeforeInstantiation(String beanName, BeanDefinition beanDefinition) {
+		Object bean = applyBeanPostProcessorsBeforeInstantiation(beanDefinition.getBeanClass(), beanName);
+		if (bean != null) {
+			bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
+		}
+		return bean;
+	}
+
+
+	/**
+	 * 在bean实例化前执行
+	 * @param beanClass
+	 * @param beanName
+	 * @return
+	 */
+	protected Object applyBeanPostProcessorsBeforeInstantiation(Class beanClass, String beanName) {
+		for (BeanPostProcessor beanPostProcessor : getBeanPostProcessors()) {
+			//如果在BeanPostProcessor池中有一个是InstantiationAwareBeanPostProcessor
+			//则需要判断该bean是否在切点表达式中，若是，则返回代理对象，若不是，则返回空，执行正常的创建逻辑
+			if (beanPostProcessor instanceof InstantiationAwareBeanPostProcessor) {
+				Object result = ((InstantiationAwareBeanPostProcessor) beanPostProcessor).postProcessBeforeInstantiation(beanClass, beanName);
+				if (result != null) {
+					return result;
+				}
+			}
+		}
+
+		return null;
+	}
+
 
 	/**
 	 * 创建bean实例，并且放入单例池，体现了“自动装配”
@@ -133,6 +180,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		return wrappedBean;
 	}
 
+	/**
+	 * 执行初始化前的前置方法
+	 * @param existingBean
+	 * @param beanName
+	 * @return
+	 * @throws BeansException
+	 */
 	@Override
 	public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName)
 			throws BeansException {
@@ -148,6 +202,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		return result;
 	}
 
+	/**
+	 * 执行初始化后的后置方法
+	 * @param existingBean
+	 * @param beanName
+	 * @return
+	 * @throws BeansException
+	 */
 	@Override
 	public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName)
 			throws BeansException {

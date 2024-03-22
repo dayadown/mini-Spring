@@ -14,6 +14,10 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor {
 	//声明前置通知
 	private MethodBeforeAdvice advice;
 
+	public MethodBeforeAdviceInterceptor(){
+
+	}
+
 	public MethodBeforeAdviceInterceptor(MethodBeforeAdvice advice) {
 		this.advice = advice;
 	}

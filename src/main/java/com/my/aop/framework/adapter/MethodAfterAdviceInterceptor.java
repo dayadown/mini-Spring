@@ -10,6 +10,8 @@ import org.aopalliance.intercept.MethodInvocation;
  */
 public class MethodAfterAdviceInterceptor implements MethodInterceptor {
     private MethodAfterAdvice methodAfterAdvice;
+
+    public MethodAfterAdviceInterceptor(){}
     public MethodAfterAdviceInterceptor(MethodAfterAdvice methodAfterAdvice){
         this.methodAfterAdvice=methodAfterAdvice;
     }

@@ -8,6 +8,7 @@ import com.my.aop.framework.ProxyFactory;
 import com.my.aop.framework.adapter.MethodAfterAdviceInterceptor;
 import com.my.aop.framework.adapter.MethodBeforeAdviceInterceptor;
 import com.my.aop.framework.adapter.MethodThrowsAdviceInterceptor;
+import com.my.context.support.ClassPathXmlApplicationContext;
 import net.sf.cglib.proxy.Enhancer;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.junit.Test;
@@ -197,5 +198,18 @@ public class AopTests {
         WorldService proxy = (WorldService) new ProxyFactory(advisedSupport).getProxy();
         proxy.explode();
 
+    }
+
+
+    /**
+     * AOP融入bean周期测试，均在xml中配置,Spring自动判断代理类，并创建代理对象返回
+     */
+    @Test
+    public void testAutoProxy() throws Exception {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:auto-proxy.xml");
+
+        //获取代理对象
+        WorldService worldService = applicationContext.getBean("worldService", WorldService.class);
+        worldService.explode();
     }
 }

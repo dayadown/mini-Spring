@@ -9,6 +9,10 @@ public class MethodThrowsAdviceInterceptor implements MethodInterceptor {
 
     private MethodThrowsAdvice methodThrowsAdvice;
 
+    public MethodThrowsAdviceInterceptor(){
+
+    }
+
     public MethodThrowsAdviceInterceptor(MethodThrowsAdvice methodThrowsAdvice){
         this.methodThrowsAdvice=methodThrowsAdvice;
     }
