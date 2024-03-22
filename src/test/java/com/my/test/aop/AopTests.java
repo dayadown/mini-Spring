@@ -6,6 +6,7 @@ import com.my.aop.framework.JdkDynamicAopProxy;
 import com.my.aop.framework.ProxyFactory;
 import com.my.aop.framework.adapter.MethodAfterAdviceInterceptor;
 import com.my.aop.framework.adapter.MethodBeforeAdviceInterceptor;
+import com.my.aop.framework.adapter.MethodThrowsAdviceInterceptor;
 import net.sf.cglib.proxy.Enhancer;
 import org.junit.Test;
 
@@ -133,20 +134,23 @@ public class AopTests {
         WorldServiceBeforeAdvice beforeAdvice = new WorldServiceBeforeAdvice();
         //设置后置通知方法
         WorldServiceAfterAdvice afterAdvice=new WorldServiceAfterAdvice();
+        //设置异常通知方法
+        WorldServiceThrowsAdvice throwsAdvice = new WorldServiceThrowsAdvice();
+
 
 
         //定义前置通知拦截器
         MethodBeforeAdviceInterceptor methodBeforeAdviceInterceptor = new MethodBeforeAdviceInterceptor(beforeAdvice);
         //定义后置通知拦截器
         MethodAfterAdviceInterceptor methodAfterAdviceInterceptor =new MethodAfterAdviceInterceptor(afterAdvice);
-
+        MethodThrowsAdviceInterceptor methodThrowsAdviceInterceptor = new MethodThrowsAdviceInterceptor(throwsAdvice);
 
 
         //定义方法选择器,选择com.my.test.aop包下，WorldService的explode方法，方法参数任意
         MethodMatcher methodMatcher = new AspectJExpressionPointcut("execution(* com.my.test.aop.WorldService.explode(..))").getMethodMatcher();
         //为代理支持加入三个参数
         advisedSupport.setTargetSource(targetSource);
-        advisedSupport.setMethodInterceptor(methodAfterAdviceInterceptor);
+        advisedSupport.setMethodInterceptor(methodThrowsAdviceInterceptor);
         advisedSupport.setMethodMatcher(methodMatcher);
 
 
